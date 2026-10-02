@@ -34,7 +34,6 @@ Rutas principales:
 
 - `/`: landing principal
 - `/catalogo`: tienda/catalogo
-- `/productos`: redirect legacy hacia `/catalogo`
 
 ## Scripts
 
@@ -50,7 +49,7 @@ npm run start    # servir build
 Crear `.env.local` para desarrollo. No se commitea porque `.env*` esta en `.gitignore`.
 
 ```env
-GOOGLE_PRODUCTS_SPREADSHEET_ID=1YOfRqKW60BDbpMFgEzju57R253828Yph4OI63emqGm8
+GOOGLE_PRODUCTS_SPREADSHEET_ID=
 
 GOOGLE_SHEETS_WEBHOOK_URL=
 GOOGLE_SHEETS_WEBHOOK_SECRET=
@@ -61,23 +60,26 @@ GOOGLE_COMMERCE_WEBHOOK_SECRET=
 GOOGLE_PLACE_QUERY=isell.cba Cordoba Argentina
 GOOGLE_PLACES_API_KEY=
 GOOGLE_PLACE_ID=
+GOOGLE_MAPS_REVIEW_URL=
+
+NEXT_PUBLIC_WHATSAPP_NUMBER=
+NEXT_PUBLIC_WHATSAPP_LABEL=
+NEXT_PUBLIC_GOOGLE_MAPS_URL=
 ```
 
 Notas:
 
-- `GOOGLE_PRODUCTS_SPREADSHEET_ID` tiene fallback en codigo al Sheet actual.
+- `GOOGLE_PRODUCTS_SPREADSHEET_ID` es obligatorio para leer productos y reseñas desde Sheets.
 - `GOOGLE_PLACES_API_KEY` es opcional. Si no existe, las reseñas salen desde la pestaña `Reseñas` del Sheet.
 - Los webhooks de cotizaciones y comercio son opcionales para la UI, pero necesarios si se quiere registrar leads/pedidos automaticamente en Sheets.
+- Las variables `NEXT_PUBLIC_*` se exponen al navegador. Usarlas solo para datos publicos del negocio.
 
 ## Google Sheets
 
-El catalogo se administra desde:
+El proyecto usa una hoja operativa privada como fuente de datos. La URL y el ID
+real de esa hoja no se guardan en el repo; se configuran por variable de entorno.
 
-```text
-https://docs.google.com/spreadsheets/d/1YOfRqKW60BDbpMFgEzju57R253828Yph4OI63emqGm8/edit
-```
-
-Pestanas relevantes:
+Pestanas esperadas:
 
 - `Catalogo web`: productos, precios, destacados, imagenes, stock y metadata para la tienda.
 - `Variantes y colores`: colores/modelos disponibles por producto.
@@ -132,8 +134,11 @@ Para deploy:
 Variables minimas recomendadas en Vercel:
 
 ```env
-GOOGLE_PRODUCTS_SPREADSHEET_ID=1YOfRqKW60BDbpMFgEzju57R253828Yph4OI63emqGm8
+GOOGLE_PRODUCTS_SPREADSHEET_ID=
 GOOGLE_PLACE_QUERY=isell.cba Cordoba Argentina
+NEXT_PUBLIC_WHATSAPP_NUMBER=
+NEXT_PUBLIC_WHATSAPP_LABEL=
+NEXT_PUBLIC_GOOGLE_MAPS_URL=
 ```
 
 Variables para registrar pedidos/cotizaciones:

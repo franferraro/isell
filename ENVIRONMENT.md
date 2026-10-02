@@ -16,6 +16,7 @@ GOOGLE_SHEETS_WEBHOOK_SECRET=
 GOOGLE_PLACES_API_KEY=
 GOOGLE_PLACE_ID=
 GOOGLE_PLACE_QUERY=isell.cba Córdoba Argentina
+GOOGLE_MAPS_REVIEW_URL=
 ```
 
 `GOOGLE_PLACE_ID` es el identificador oficial del local en Google Maps. Se puede
@@ -26,9 +27,12 @@ texto, aunque para producción conviene dejar fijo el `GOOGLE_PLACE_ID`.
 ## Catálogo y carrito
 
 ```env
-GOOGLE_PRODUCTS_SPREADSHEET_ID=1YOfRqKW60BDbpMFgEzju57R253828Yph4OI63emqGm8
+GOOGLE_PRODUCTS_SPREADSHEET_ID=
 GOOGLE_COMMERCE_WEBHOOK_URL=
 GOOGLE_COMMERCE_WEBHOOK_SECRET=
+NEXT_PUBLIC_WHATSAPP_NUMBER=
+NEXT_PUBLIC_WHATSAPP_LABEL=
+NEXT_PUBLIC_GOOGLE_MAPS_URL=
 ```
 
 `GOOGLE_PRODUCTS_SPREADSHEET_ID` lee las pestañas `Catalogo web` y
@@ -39,3 +43,6 @@ estar publicada o compartida de manera que Vercel pueda leer el CSV público.
 Si no están configuradas, el carrito igual abre WhatsApp con el pedido. Si están
 configuradas, además registra el pedido en las pestañas `Pedidos WhatsApp` y
 `Lineas de pedido`.
+
+Las variables `NEXT_PUBLIC_*` quedan visibles en el navegador. No guardar secrets
+en variables con ese prefijo.

@@ -29,7 +29,9 @@ import {
   Zap,
 } from "lucide-react";
 
-const whatsappNumber = "5493517409901";
+const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "";
+const whatsappLabel = process.env.NEXT_PUBLIC_WHATSAPP_LABEL || "WhatsApp";
+const googleMapsUrl = process.env.NEXT_PUBLIC_GOOGLE_MAPS_URL || "#";
 
 const services = [
   {
@@ -1023,7 +1025,7 @@ Los datos y las fotos ya quedaron registrados.`;
           {reviewsData?.rating && (
             <a
               className="google-rating"
-              href={reviewsData.url || "https://maps.app.goo.gl/Sp41K2znRYenGiKo7"}
+              href={reviewsData.url || googleMapsUrl}
               target="_blank"
               rel="noreferrer"
             >
@@ -1121,7 +1123,7 @@ Los datos y las fotos ya quedaron registrados.`;
           <div className="footer-column"><strong>Servicios</strong><a href="#servicios">Servicio técnico</a><a href="#servicios">Cambio de pantalla</a><a href="#servicios">Cambio de batería</a><a href="#cotizar">Compra de usados</a></div>
           <div className="footer-column contact-column">
             <strong>Contacto</strong>
-            <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noreferrer"><WhatsAppIcon /> 351 740 9901</a>
+            <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noreferrer"><WhatsAppIcon /> {whatsappLabel}</a>
             <a href="https://instagram.com/isell.cba" target="_blank" rel="noreferrer"><InstagramIcon size={16} /> @isell.cba</a>
             <span><MapPin size={16} /> Zona Norte, Córdoba</span>
             <span className="hours">Lun a Vie 9:00–18:00<br />Sábados 9:00–13:00</span>

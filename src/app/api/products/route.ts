@@ -1,4 +1,3 @@
-const DEFAULT_SPREADSHEET_ID = "1YOfRqKW60BDbpMFgEzju57R253828Yph4OI63emqGm8";
 const PRODUCT_SHEET = "Catalogo web";
 const VARIANT_SHEET = "Variantes y colores";
 
@@ -112,7 +111,14 @@ async function fetchSheetRows(spreadsheetId: string, sheetName: string) {
 }
 
 export async function GET() {
-  const spreadsheetId = process.env.GOOGLE_PRODUCTS_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
+  const spreadsheetId = process.env.GOOGLE_PRODUCTS_SPREADSHEET_ID;
+
+  if (!spreadsheetId) {
+    return Response.json(
+      { error: "Falta configurar GOOGLE_PRODUCTS_SPREADSHEET_ID." },
+      { status: 503 },
+    );
+  }
 
   try {
     const [productRows, variantRows] = await Promise.all([

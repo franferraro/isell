@@ -1,4 +1,3 @@
-const COMMERCE_SPREADSHEET_ID = "1YOfRqKW60BDbpMFgEzju57R253828Yph4OI63emqGm8";
 const ORDERS_SHEET_NAME = "Pedidos WhatsApp";
 const ORDER_LINES_SHEET_NAME = "Lineas de pedido";
 
@@ -57,7 +56,8 @@ function doPost(event) {
       return jsonResponse({ ok: false, error: "Accion no soportada." });
     }
 
-    const spreadsheet = SpreadsheetApp.openById(COMMERCE_SPREADSHEET_ID);
+    const spreadsheetId = getRequiredScriptProperty("COMMERCE_SPREADSHEET_ID");
+    const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
     const ordersSheet = getOrCreateSheet(spreadsheet, ORDERS_SHEET_NAME, ORDER_HEADERS);
     const linesSheet = getOrCreateSheet(spreadsheet, ORDER_LINES_SHEET_NAME, ORDER_LINE_HEADERS);
     const submittedAt = new Date(payload.submittedAt || new Date());
@@ -116,6 +116,14 @@ function doPost(event) {
   } finally {
     if (lockAcquired) lock.releaseLock();
   }
+}
+
+function getRequiredScriptProperty(name) {
+  const value = PropertiesService.getScriptProperties().getProperty(name);
+  if (!value) {
+    throw new Error("Falta configurar la propiedad " + name + ".");
+  }
+  return value;
 }
 
 function getOrCreateSheet(spreadsheet, sheetName, headers) {

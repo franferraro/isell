@@ -2,9 +2,7 @@
 
 ## Hoja vinculada
 
-El script está configurado para esta hoja:
-
-`https://docs.google.com/spreadsheets/d/1QFiPhg-hNc8tsA2DQ-pLcnQCr9Q6Npiehy7m7LuFT9w/edit`
+El script se instala en la hoja de cotizaciones del cliente.
 
 La carpeta `isell.cba - Fotos de cotizaciones` se crea automáticamente
 en Google Drive con la primera solicitud.
@@ -14,8 +12,10 @@ en Google Drive con la primera solicitud.
 1. En la hoja, abrí `Extensiones > Apps Script`.
 2. Reemplazá el contenido de `Code.gs` por el archivo [Code.gs](./Code.gs).
 3. En `Configuración del proyecto > Propiedades de la secuencia de comandos`, agregá:
+   - Nombre: `QUOTES_SPREADSHEET_ID`
+   - Valor: el ID de la hoja de cotizaciones.
    - Nombre: `WEBHOOK_SECRET`
-   - Valor: `a7c5c45a2b7bb2411c59cd087158d8c74812e594074d5b96e15614002bd20648`
+   - Valor: una clave larga propia.
 4. Configurá la zona horaria del proyecto como `America/Argentina/Cordoba`.
 
 ## 2. Publicar el webhook
@@ -33,7 +33,7 @@ En `.env.local`, reemplazá `PEGAR_URL_EXEC_AQUI` por la URL copiada:
 
 ```env
 GOOGLE_SHEETS_WEBHOOK_URL=https://script.google.com/macros/s/PEGAR_URL_EXEC_AQUI/exec
-GOOGLE_SHEETS_WEBHOOK_SECRET=a7c5c45a2b7bb2411c59cd087158d8c74812e594074d5b96e15614002bd20648
+GOOGLE_SHEETS_WEBHOOK_SECRET=LA_MISMA_CLAVE_DEL_SCRIPT
 ```
 
 Reiniciá `npm run dev` después de crear o modificar `.env.local`.

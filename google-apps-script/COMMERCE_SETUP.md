@@ -6,7 +6,7 @@ por WhatsApp.
 
 ## Hoja vinculada
 
-`https://docs.google.com/spreadsheets/d/1YOfRqKW60BDbpMFgEzju57R253828Yph4OI63emqGm8/edit`
+El script se instala en la hoja operativa del cliente.
 
 Usa estas pestañas:
 
@@ -20,6 +20,8 @@ Usa estas pestañas:
 3. Pegá el contenido de [Commerce.gs](./Commerce.gs).
 4. En `Configuración del proyecto > Propiedades de la secuencia de comandos`,
    agregá:
+   - Nombre: `COMMERCE_SPREADSHEET_ID`
+   - Valor: el ID de la hoja operativa.
    - Nombre: `COMMERCE_WEBHOOK_SECRET`
    - Valor: una clave larga propia.
 5. Configurá la zona horaria como `America/Argentina/Cordoba`.

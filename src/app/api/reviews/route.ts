@@ -1,8 +1,6 @@
 const GOOGLE_PLACES_URL = "https://places.googleapis.com/v1/places";
 const GOOGLE_TEXT_SEARCH_URL = `${GOOGLE_PLACES_URL}:searchText`;
-const DEFAULT_SPREADSHEET_ID = "1YOfRqKW60BDbpMFgEzju57R253828Yph4OI63emqGm8";
 const REVIEWS_SHEET = "Reseñas";
-const MAPS_REVIEW_URL = "https://www.google.com/maps/place/Isell.cba/@-31.3915159,-64.2211381,17z/data=!4m8!3m7!1s0x9432990078c340f9:0x13af009e4028cba9!8m2!3d-31.3915159!4d-64.2211381!9m1!1b1!16s%2Fg%2F11nvvbmww9";
 const OBSERVED_GOOGLE_REVIEW_COUNT = 9;
 
 export const dynamic = "force-dynamic";
@@ -120,7 +118,10 @@ function initialsFromName(name: string) {
 }
 
 async function fetchSheetReviews() {
-  const spreadsheetId = process.env.GOOGLE_PRODUCTS_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
+  const spreadsheetId = process.env.GOOGLE_PRODUCTS_SPREADSHEET_ID;
+  if (!spreadsheetId) return null;
+  const mapsReviewUrl = process.env.GOOGLE_MAPS_REVIEW_URL || process.env.NEXT_PUBLIC_GOOGLE_MAPS_URL || "#";
+
   const response = await fetch(csvUrl(spreadsheetId, REVIEWS_SHEET), {
     cache: "no-store",
   });
@@ -139,7 +140,7 @@ async function fetchSheetReviews() {
       initials: review.iniciales || initialsFromName(review.nombre),
       location: review.fecha ? `${review.fecha} · ${review.origen || "Google Maps"}` : review.origen || "Google Maps",
       rating: Math.round(toNumber(review.estrellas) || 5),
-      url: review.link || MAPS_REVIEW_URL,
+      url: review.link || mapsReviewUrl,
       order: toNumber(review.orden),
     }))
     .sort((a, b) => a.order - b.order);
@@ -153,7 +154,7 @@ async function fetchSheetReviews() {
     placeName: "Isell.cba",
     rating,
     userRatingCount: Math.max(reviews.length, OBSERVED_GOOGLE_REVIEW_COUNT),
-    url: MAPS_REVIEW_URL,
+    url: mapsReviewUrl,
     reviews: reviews.slice(0, 6),
   };
 }
@@ -263,7 +264,7 @@ export async function GET() {
           initials: initialsFromName(author),
           location: review.relativePublishTimeDescription || "Reseña en Google",
           rating: Math.round(review.rating || 5),
-          url: review.googleMapsUri || review.authorAttribution?.uri || place.googleMapsUri || MAPS_REVIEW_URL,
+          url: review.googleMapsUri || review.authorAttribution?.uri || place.googleMapsUri || mapsReviewUrl,
         };
       });
 
@@ -272,7 +273,7 @@ export async function GET() {
       placeName: place.displayName?.text || "isell.cba",
       rating: place.rating,
       userRatingCount: place.userRatingCount,
-      url: place.googleMapsUri || MAPS_REVIEW_URL,
+      url: place.googleMapsUri || mapsReviewUrl,
       reviews,
     });
   } catch (error) {
@@ -283,3 +284,4 @@ export async function GET() {
     return Response.json({ error: "No pudimos cargar las reseñas de Google en este momento." }, { status: 502 });
   }
 }
+    const mapsReviewUrl = process.env.GOOGLE_MAPS_REVIEW_URL || process.env.NEXT_PUBLIC_GOOGLE_MAPS_URL || "#";

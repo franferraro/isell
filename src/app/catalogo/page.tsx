@@ -18,7 +18,7 @@ import {
   X,
 } from "lucide-react";
 
-const whatsappNumber = "5493517409901";
+const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "";
 
 type ProductColor = {
   name: string;

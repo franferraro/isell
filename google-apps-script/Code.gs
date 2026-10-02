@@ -1,5 +1,4 @@
 const SHEET_NAME = "Cotizaciones";
-const SPREADSHEET_ID = "1QFiPhg-hNc8tsA2DQ-pLcnQCr9Q6Npiehy7m7LuFT9w";
 const PHOTOS_FOLDER_NAME = "isell.cba - Fotos de cotizaciones";
 const HEADERS = [
   "ID",
@@ -33,7 +32,8 @@ function doPost(event) {
       return jsonResponse({ ok: false, error: "No autorizado." });
     }
 
-    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const spreadsheetId = getRequiredScriptProperty(properties, "QUOTES_SPREADSHEET_ID");
+    const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
     const sheet = getOrCreateSheet(spreadsheet);
     const quoteId = createQuoteId();
     const folder = getPhotosFolder(properties).createFolder(quoteId);
@@ -67,6 +67,14 @@ function doPost(event) {
   } finally {
     if (lockAcquired) lock.releaseLock();
   }
+}
+
+function getRequiredScriptProperty(properties, name) {
+  const value = properties.getProperty(name);
+  if (!value) {
+    throw new Error("Falta configurar la propiedad " + name + ".");
+  }
+  return value;
 }
 
 function getPhotosFolder(properties) {
