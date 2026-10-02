@@ -746,7 +746,7 @@ Los datos y las fotos ya quedaron registrados.`;
         <FadeIn className="section-heading">
           <div>
             <span className="section-kicker">Tienda viva</span>
-            <h2>Tienda destacada,<br /><em>actualizada desde Sheets.</em></h2>
+            <h2>Tienda destacada<br /></h2>
           </div>
           <div>
             <p>Elegí accesorios, armá tu pedido y lo cerramos por WhatsApp con disponibilidad confirmada.</p>
