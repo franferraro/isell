@@ -587,7 +587,8 @@ Los datos y las fotos ya quedaron registrados.`;
     <main>
       <header className="site-header">
         <a className="brand" href="#inicio" aria-label="isell.cba, inicio">
-          isell<span>.cba</span>
+          <Image src="/images/logo-isell.png" alt="isell.cba" width={46} height={48} priority />
+          <span>isell.cba</span>
         </a>
         <nav className={menuOpen ? "nav-menu is-open" : "nav-menu"} aria-label="Navegación principal">
           <a href="#servicios" onClick={() => setMenuOpen(false)}>Servicios</a>
@@ -1112,7 +1113,10 @@ Los datos y las fotos ya quedaron registrados.`;
       <footer>
         <div className="footer-main">
           <div className="footer-brand">
-            <a className="brand" href="#inicio">isell<span>.cba</span></a>
+            <a className="brand" href="#inicio">
+              <Image src="/images/logo-isell.png" alt="isell.cba" width={46} height={48} />
+              <span>isell.cba</span>
+            </a>
             <p>Todo para tu celular<br />en un solo lugar.</p>
             <div className="socials">
               <a href="https://instagram.com/isell.cba" target="_blank" rel="noreferrer" aria-label="Instagram"><InstagramIcon /></a>

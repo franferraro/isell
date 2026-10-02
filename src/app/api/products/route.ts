@@ -171,7 +171,6 @@ export async function GET() {
 
     return Response.json({
       source: "google-sheets",
-      spreadsheetId,
       updatedAt: new Date().toISOString(),
       products,
     }, {

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowLeft,
   ArrowRight,
@@ -311,7 +312,8 @@ Me confirman disponibilidad y forma de pago/envío?`;
     <main className="catalog-page">
       <header className="catalog-header">
         <Link className="brand" href="/" aria-label="Volver al inicio">
-          isell<span>.cba</span>
+          <Image src="/images/logo-isell.png" alt="isell.cba" width={46} height={48} priority />
+          <span>isell.cba</span>
         </Link>
         <nav>
           <Link className="catalog-back-link" href="/">
