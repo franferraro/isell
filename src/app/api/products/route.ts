@@ -154,6 +154,7 @@ export async function GET() {
           family: product.familia_web,
           type: product.tipo_producto,
           price: toNumber(product.precio_venta),
+          discountPrice: toNumber(product.precio_descuento),
           currency: product.moneda || "ARS",
           featured: (product.destacado || "").toLowerCase() === "si",
           stockStatus: product.stock_estado || "Consultar",

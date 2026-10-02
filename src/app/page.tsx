@@ -112,6 +112,7 @@ type Product = {
   family: string;
   type: string;
   price: number;
+  discountPrice?: number;
   currency: string;
   featured: boolean;
   stockStatus: string;
@@ -296,12 +297,20 @@ function formatPrice(value: number, currency = "ARS") {
   }
 }
 
+function hasDiscount(product: Product) {
+  return Boolean(product.discountPrice && product.discountPrice > 0 && product.discountPrice < product.price);
+}
+
+function getProductUnitPrice(product: Product) {
+  return hasDiscount(product) ? product.discountPrice || product.price : product.price;
+}
+
 function getCartTotals(cart: CartItem[]) {
   const totals = new Map<string, number>();
 
   cart.forEach((item) => {
     const currency = item.product.currency || "ARS";
-    totals.set(currency, (totals.get(currency) || 0) + item.quantity * item.product.price);
+    totals.set(currency, (totals.get(currency) || 0) + item.quantity * getProductUnitPrice(item.product));
   });
 
   return Array.from(totals.entries()).map(([currency, total]) => ({ currency, total }));
@@ -479,7 +488,7 @@ export default function Home() {
         id: item.product.id,
         name: item.product.name,
         quantity: item.quantity,
-        price: item.product.price,
+        price: getProductUnitPrice(item.product),
         currency: item.product.currency,
         variantId: item.color?.variantId,
         color: item.color?.name,
@@ -495,7 +504,7 @@ export default function Home() {
 
     const lines = cart.map((item) => {
       const detail = [item.color?.name, item.color?.model].filter(Boolean).join(" / ");
-      return `• ${item.quantity} x ${item.product.name}${detail ? ` (${detail})` : ""} - ${formatPrice(item.product.price * item.quantity, item.product.currency)}`;
+      return `• ${item.quantity} x ${item.product.name}${detail ? ` (${detail})` : ""} - ${formatPrice(getProductUnitPrice(item.product) * item.quantity, item.product.currency)}`;
     }).join("\n");
 
     const message = `Hola isell.cba, quiero consultar disponibilidad de este pedido.
@@ -780,7 +789,10 @@ Los datos y las fotos ya quedaron registrados.`;
                   <h3>{product.name}</h3>
                   <p>{product.description}</p>
                   <div className="product-meta">
-                    <strong>{formatPrice(product.price, product.currency)}</strong>
+                    <div className="price-stack">
+                      {hasDiscount(product) && <del>{formatPrice(product.price, product.currency)}</del>}
+                      <strong>{formatPrice(getProductUnitPrice(product), product.currency)}</strong>
+                    </div>
                     <small>{product.stockStatus}</small>
                   </div>
                   {!!displayColors.length && (
@@ -1167,7 +1179,7 @@ Los datos y las fotos ya quedaron registrados.`;
                 <div>
                   <strong>{item.product.name}</strong>
                   <span>{[item.color?.name, item.color?.model].filter(Boolean).join(" / ") || item.product.category}</span>
-                  <small>{formatPrice(item.product.price, item.product.currency)}</small>
+                  <small>{formatPrice(getProductUnitPrice(item.product), item.product.currency)}</small>
                 </div>
                 <div className="cart-controls">
                   <button onClick={() => updateCartItem(index, item.quantity - 1)} aria-label="Restar unidad"><Minus size={14} /></button>

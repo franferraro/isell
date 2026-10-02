@@ -661,6 +661,19 @@ input:focus, select:focus, textarea:focus { border-color: var(--blue); box-shado
 .product-meta strong {
   font-size: 18px;
 }
+.price-stack {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.price-stack del,
+.spotlight-info del {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration-thickness: 1.5px;
+}
 .product-meta small {
   color: var(--muted);
   font-size: 8px;
