@@ -1086,7 +1086,9 @@ Los datos y las fotos ya quedaron registrados.`;
               <span>{area}</span>
             </div>
           ))}
-          <div className="map-center"><span>isell</span><small>.cba</small></div>
+          <div className="map-center">
+            <Image src="/images/logo-isell.png" alt="isell.cba" width={44} height={44} />
+          </div>
         </FadeIn>
         <FadeIn className="coverage-copy">
           <span className="section-kicker">Cerca tuyo</span>

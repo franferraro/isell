@@ -846,9 +846,8 @@ input:focus, select:focus, textarea:focus { border-color: var(--blue); box-shado
 .road-one { left: 25%; top: -20%; }
 .road-two { left: 65%; top: -20%; transform: rotate(-24deg); }
 .road-three { left: 43%; top: -20%; transform: rotate(74deg); }
-.map-center { position: absolute; left: 47%; top: 47%; width: 72px; height: 72px; display: grid; place-content: center; text-align: center; border: 7px solid rgba(23,18,122,.18); border-radius: 50%; color: white; background: var(--blue); box-shadow: 0 5px 20px rgba(0,0,0,.2); font-weight: 800; }
-.map-center span { font-size: 13px; line-height: .8; }
-.map-center small { font-size: 8px; }
+.map-center { position: absolute; left: 47%; top: 47%; width: 76px; height: 76px; display: grid; place-content: center; text-align: center; border: 7px solid rgba(23,18,122,.18); border-radius: 50%; color: white; background: white; box-shadow: 0 5px 20px rgba(0,0,0,.2); font-weight: 800; }
+.map-center img { width: 48px; height: 48px; display: block; object-fit: contain; object-position: center; }
 .map-pin { position: absolute; display: flex; align-items: center; gap: 5px; font-size: 8px; font-weight: 800; }
 .map-pin svg { color: #272725; }
 .pin-1 { top: 17%; left: 25%; }
