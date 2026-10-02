@@ -363,14 +363,17 @@ function FadeIn({
   children,
   className = "",
   delay = 0,
+  ariaHidden,
 }: {
   children: React.ReactNode;
   className?: string;
   delay?: number;
+  ariaHidden?: boolean;
 }) {
   return (
     <motion.div
       className={className}
+      aria-hidden={ariaHidden}
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
@@ -1040,30 +1043,37 @@ Los datos y las fotos ya quedaron registrados.`;
             </a>
           )}
         </FadeIn>
-        <div className="testimonial-grid">
-          {testimonials.map((testimonial, index) => (
-            <FadeIn className="testimonial-card" delay={index * 0.08} key={testimonial.id || testimonial.name}>
-              <div className="rating">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    size={14}
-                    fill={star <= (testimonial.rating ?? 5) ? "currentColor" : "none"}
-                  />
-                ))}
-              </div>
-              <blockquote>“{testimonial.quote}”</blockquote>
-              <div className="testimonial-person">
-                <span>{testimonial.initials || getInitials(testimonial.name)}</span>
-                <div><strong>{testimonial.name}</strong><small>{testimonial.location}</small></div>
-              </div>
-              {testimonial.url && (
-                <a className="review-link" href={testimonial.url} target="_blank" rel="noreferrer">
-                  Ver en Google <ArrowRight size={14} />
-                </a>
-              )}
-            </FadeIn>
-          ))}
+        <div className="testimonial-carousel" aria-label="Reseñas de clientes">
+          <div className="testimonial-track">
+            {[...testimonials, ...testimonials].map((testimonial, index) => (
+              <FadeIn
+                className="testimonial-card"
+                delay={(index % testimonials.length) * 0.05}
+                key={`${testimonial.id || testimonial.name}-${index}`}
+                ariaHidden={index >= testimonials.length}
+              >
+                <div className="rating">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      size={14}
+                      fill={star <= (testimonial.rating ?? 5) ? "currentColor" : "none"}
+                    />
+                  ))}
+                </div>
+                <blockquote>“{testimonial.quote}”</blockquote>
+                <div className="testimonial-person">
+                  <span>{testimonial.initials || getInitials(testimonial.name)}</span>
+                  <div><strong>{testimonial.name}</strong><small>{testimonial.location}</small></div>
+                </div>
+                {testimonial.url && (
+                  <a className="review-link" href={testimonial.url} target="_blank" rel="noreferrer">
+                    Ver en Google <ArrowRight size={14} />
+                  </a>
+                )}
+              </FadeIn>
+            ))}
+          </div>
         </div>
       </section>
 
