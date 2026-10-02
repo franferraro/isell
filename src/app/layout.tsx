@@ -19,8 +19,13 @@ export const metadata: Metadata = {
     type: "website",
   },
   icons: {
-    icon: "/images/logo-isell.png",
-    apple: "/images/logo-isell.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png?v=2", type: "image/png" },
+      { url: "/images/logo-isell.png?v=2", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/images/logo-isell.png?v=2",
   },
 };
 

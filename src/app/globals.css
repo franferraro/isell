@@ -73,10 +73,11 @@ main {
 }
 
 .brand img {
-  width: 42px;
+  width: 44px;
   height: 44px;
   display: block;
   object-fit: contain;
+  object-position: center;
 }
 
 .brand span {

@@ -587,7 +587,7 @@ Los datos y las fotos ya quedaron registrados.`;
     <main>
       <header className="site-header">
         <a className="brand" href="#inicio" aria-label="isell.cba, inicio">
-          <Image src="/images/logo-isell.png" alt="isell.cba" width={46} height={48} priority />
+          <Image src="/images/logo-isell.png" alt="isell.cba" width={48} height={48} priority />
           <span>isell.cba</span>
         </a>
         <nav className={menuOpen ? "nav-menu is-open" : "nav-menu"} aria-label="Navegación principal">
@@ -1114,7 +1114,7 @@ Los datos y las fotos ya quedaron registrados.`;
         <div className="footer-main">
           <div className="footer-brand">
             <a className="brand" href="#inicio">
-              <Image src="/images/logo-isell.png" alt="isell.cba" width={46} height={48} />
+              <Image src="/images/logo-isell.png" alt="isell.cba" width={48} height={48} />
               <span>isell.cba</span>
             </a>
             <p>Todo para tu celular<br />en un solo lugar.</p>

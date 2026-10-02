@@ -312,7 +312,7 @@ Me confirman disponibilidad y forma de pago/envío?`;
     <main className="catalog-page">
       <header className="catalog-header">
         <Link className="brand" href="/" aria-label="Volver al inicio">
-          <Image src="/images/logo-isell.png" alt="isell.cba" width={46} height={48} priority />
+          <Image src="/images/logo-isell.png" alt="isell.cba" width={48} height={48} priority />
           <span>isell.cba</span>
         </Link>
         <nav>
