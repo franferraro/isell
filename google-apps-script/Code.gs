@@ -21,8 +21,6 @@ const HEADERS = [
 ];
 
 function doPost(event) {
-  let lockAcquired = false;
-
   try {
     const payload = JSON.parse(event.postData.contents);
     const properties = PropertiesService.getScriptProperties();
@@ -62,10 +60,6 @@ function doPost(event) {
       safeCell(payload.source || "web-plan-canje"),
     ];
 
-    const lock = LockService.getScriptLock();
-    lock.waitLock(5000);
-    lockAcquired = true;
-
     const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
     const sheet = getOrCreateSheet(spreadsheet);
     sheet.appendRow(row);
@@ -78,8 +72,6 @@ function doPost(event) {
     });
   } catch (error) {
     return jsonResponse({ ok: false, error: String(error) });
-  } finally {
-    if (lockAcquired) lock.releaseLock();
   }
 }
 

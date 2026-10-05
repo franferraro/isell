@@ -567,12 +567,29 @@ Me confirman disponibilidad y forma de pago/envío?`;
     const selectedFiles = data
       .getAll("photos")
       .filter((entry): entry is File => entry instanceof File && entry.size > 0);
+    const immediateMessage = `Hola isell.cba, quiero cotizar mi celular.
+
+• Nombre: ${data.get("name")}
+• Modelo: ${data.get("model")}
+• Capacidad: ${data.get("storage")}
+• Batería: ${data.get("batteryHealth")}%
+• Estado: ${data.get("condition")}
+• Fotos seleccionadas: ${Math.min(selectedFiles.length, 5)}
+
+Envié la solicitud desde la web.`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(immediateMessage)}`;
+
+    if (whatsappWindow) {
+      whatsappWindow.location.href = whatsappUrl;
+    } else {
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    }
 
     setQuoteStatus("sending");
     setQuoteMessage(
       selectedFiles.length
-        ? "Guardando la solicitud y subiendo las fotos..."
-        : "Guardando la solicitud...",
+        ? "WhatsApp abierto. Registrando la solicitud y subiendo las fotos..."
+        : "WhatsApp abierto. Registrando la solicitud...",
     );
 
     try {
@@ -597,30 +614,11 @@ Me confirman disponibilidad y forma de pago/envío?`;
         throw new Error(result.error || "No se pudo guardar la cotización.");
       }
 
-      const message = `Hola isell.cba, envié una solicitud para cotizar mi celular.
-
-• Cotización: ${result.id}
-• Nombre: ${data.get("name")}
-• Modelo: ${data.get("model")}
-• Capacidad: ${data.get("storage")}
-• Batería: ${data.get("batteryHealth")}%
-• Estado: ${data.get("condition")}
-• Fotos enviadas: ${compressedFiles.length}
-
-Los datos y las fotos ya quedaron registrados.`;
-
       setQuoteStatus("success");
-      setQuoteMessage(`Solicitud ${result.id} guardada correctamente. Abriendo WhatsApp...`);
+      setQuoteMessage(`Solicitud ${result.id} guardada correctamente.`);
       form.reset();
       setFiles(0);
-      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-      if (whatsappWindow) {
-        whatsappWindow.location.href = whatsappUrl;
-      } else {
-        window.location.href = whatsappUrl;
-      }
     } catch (error) {
-      whatsappWindow?.close();
       setQuoteStatus("error");
       setQuoteMessage(error instanceof Error ? error.message : "No se pudo enviar la solicitud.");
     }
