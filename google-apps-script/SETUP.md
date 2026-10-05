@@ -12,11 +12,13 @@ en Google Drive con la primera solicitud.
 1. En la hoja, abrí `Extensiones > Apps Script`.
 2. Reemplazá el contenido de `Code.gs` por el archivo [Code.gs](./Code.gs).
 3. En `Configuración del proyecto > Propiedades de la secuencia de comandos`, agregá:
-   - Nombre: `QUOTES_SPREADSHEET_ID`
-   - Valor: `1YOfRqKW60BDbpMFgEzju57R253828Yph4OI63emqGm8`
    - Nombre: `WEBHOOK_SECRET`
    - Valor: una clave larga propia.
 4. Configurá la zona horaria del proyecto como `America/Argentina/Cordoba`.
+
+El destino de Plan Canje queda fijo en la planilla `Isell`
+(`1YOfRqKW60BDbpMFgEzju57R253828Yph4OI63emqGm8`) desde el código para evitar que
+una propiedad vieja mande las cotizaciones a otra hoja.
 
 ## 2. Publicar el webhook
 

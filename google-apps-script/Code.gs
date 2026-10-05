@@ -32,7 +32,7 @@ function doPost(event) {
       return jsonResponse({ ok: false, error: "No autorizado." });
     }
 
-    const spreadsheetId = properties.getProperty("QUOTES_SPREADSHEET_ID") || DEFAULT_QUOTES_SPREADSHEET_ID;
+    const spreadsheetId = DEFAULT_QUOTES_SPREADSHEET_ID;
     const batteryHealth = Number(payload.batteryHealth || 0);
 
     if (!Number.isInteger(batteryHealth) || batteryHealth < 1 || batteryHealth > 100) {
