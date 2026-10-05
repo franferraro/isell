@@ -127,10 +127,14 @@ main {
   display: grid;
   place-items: center;
   color: white;
-  background: var(--blue);
+  background: #0a0a0a;
   border: 0;
   border-radius: 50%;
   cursor: pointer;
+}
+
+.cart-trigger:hover {
+  background: #171717;
 }
 
 .cart-trigger span {

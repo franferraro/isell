@@ -656,7 +656,7 @@ Los datos y las fotos ya quedaron registrados.`;
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.25 }}
           >
-            Accesorios premium, servicio técnico especializado y compra de celulares usados en Zona Norte de Córdoba.
+            Celulares sellados y usados seleccionados, accesorios y servicio técnico.
           </motion.p>
           <motion.div
             className="hero-actions"
@@ -820,12 +820,12 @@ Los datos y las fotos ya quedaron registrados.`;
       <section className="quote-section section" id="cotizar">
         <FadeIn className="quote-intro">
           <span className="section-kicker">Renová tu equipo</span>
-          <h2>Tu celular usado<br /><em>todavía tiene valor.</em></h2>
-          <p>Recibí una propuesta rápida, honesta y transparente por tu dispositivo. Sin vueltas.</p>
+          <h2>PLAN CANJE</h2>
+          <p>Entregá tu celu como parte de pago y llevate tu próximo iPhone.</p>
           <div className="quote-points">
-            <span><Check size={16} /> Cotización sin cargo</span>
-            <span><Check size={16} /> Respuesta ágil</span>
-            <span><Check size={16} /> Pago seguro</span>
+            <span><Check size={16} /> Una propuesta por tu equipo clara, sin vueltas.</span>
+            <span><Check size={16} /> Una propuesta por tu equipo clara, sin vueltas.</span>
+            <span><Check size={16} /> Respuesta rápida.</span>
           </div>
           <div className="trade-visual" aria-hidden="true">
             <div className="trade-phone"><Smartphone /></div>
@@ -970,10 +970,10 @@ Los datos y las fotos ya quedaron registrados.`;
         <FadeIn className="section-heading">
           <div>
             <span className="section-kicker">Accesorios</span>
-            <h2>Diseño que se ve.<br /><em>Calidad que se siente.</em></h2>
+            <h2>Equipá tu celu a tu manera.</h2>
           </div>
           <div>
-            <p>Una selección curada para proteger, potenciar y darle tu estilo a cada dispositivo.</p>
+            <p>Accesorios de calidad para tu día a día. Fundas, vidrios, cables, cargadores y más.</p>
             <a href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Hola, quiero conocer el catálogo de accesorios.")}`} target="_blank" rel="noreferrer">
               Ver catálogo completo <ArrowRight size={15} />
             </a>
