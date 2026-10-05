@@ -1,4 +1,5 @@
 const SHEET_NAME = "Cotizaciones equipos";
+const DEFAULT_QUOTES_SPREADSHEET_ID = "1YOfRqKW60BDbpMFgEzju57R253828Yph4OI63emqGm8";
 const PHOTOS_FOLDER_NAME = "isell.cba - Fotos de cotizaciones";
 const HEADERS = [
   "ID",
@@ -34,7 +35,7 @@ function doPost(event) {
       return jsonResponse({ ok: false, error: "No autorizado." });
     }
 
-    const spreadsheetId = getRequiredScriptProperty(properties, "QUOTES_SPREADSHEET_ID");
+    const spreadsheetId = properties.getProperty("QUOTES_SPREADSHEET_ID") || DEFAULT_QUOTES_SPREADSHEET_ID;
     const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
     const sheet = getOrCreateSheet(spreadsheet);
     const quoteId = createQuoteId();

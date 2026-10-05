@@ -13,7 +13,7 @@ en Google Drive con la primera solicitud.
 2. Reemplazá el contenido de `Code.gs` por el archivo [Code.gs](./Code.gs).
 3. En `Configuración del proyecto > Propiedades de la secuencia de comandos`, agregá:
    - Nombre: `QUOTES_SPREADSHEET_ID`
-   - Valor: el ID de la hoja de cotizaciones.
+   - Valor: `1YOfRqKW60BDbpMFgEzju57R253828Yph4OI63emqGm8`
    - Nombre: `WEBHOOK_SECRET`
    - Valor: una clave larga propia.
 4. Configurá la zona horaria del proyecto como `America/Argentina/Cordoba`.
@@ -38,5 +38,5 @@ GOOGLE_SHEETS_WEBHOOK_SECRET=LA_MISMA_CLAVE_DEL_SCRIPT
 
 Reiniciá `npm run dev` después de crear o modificar `.env.local`.
 
-La primera solicitud crea la pestaña `Cotizaciones` con columnas para datos,
+La primera solicitud crea o usa la pestaña `Cotizaciones equipos` con columnas para datos,
 fotos, estado de gestión, valor interno, precio de venta y observaciones.
