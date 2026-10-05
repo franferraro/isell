@@ -328,7 +328,7 @@ function formatCartTotals(cart: CartItem[]) {
 
 async function compressImage(file: File) {
   const bitmap = await createImageBitmap(file);
-  const maxDimension = 1600;
+  const maxDimension = 1280;
   const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
   const canvas = document.createElement("canvas");
   canvas.width = Math.round(bitmap.width * scale);
@@ -344,7 +344,7 @@ async function compressImage(file: File) {
     canvas.toBlob(
       (result) => result ? resolve(result) : reject(new Error("No se pudo comprimir la imagen.")),
       "image/jpeg",
-      0.82,
+      0.72,
     );
   });
 
@@ -569,7 +569,11 @@ Me confirman disponibilidad y forma de pago/envío?`;
       .filter((entry): entry is File => entry instanceof File && entry.size > 0);
 
     setQuoteStatus("sending");
-    setQuoteMessage("Guardando la solicitud y subiendo las fotos...");
+    setQuoteMessage(
+      selectedFiles.length
+        ? "Guardando la solicitud y subiendo las fotos..."
+        : "Guardando la solicitud...",
+    );
 
     try {
       const payload = new FormData();

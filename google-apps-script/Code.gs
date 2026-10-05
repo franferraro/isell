@@ -21,12 +21,9 @@ const HEADERS = [
 ];
 
 function doPost(event) {
-  const lock = LockService.getScriptLock();
   let lockAcquired = false;
 
   try {
-    lock.waitLock(10000);
-    lockAcquired = true;
     const payload = JSON.parse(event.postData.contents);
     const properties = PropertiesService.getScriptProperties();
     const expectedSecret = properties.getProperty("WEBHOOK_SECRET");
@@ -36,18 +33,17 @@ function doPost(event) {
     }
 
     const spreadsheetId = properties.getProperty("QUOTES_SPREADSHEET_ID") || DEFAULT_QUOTES_SPREADSHEET_ID;
-    const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
-    const sheet = getOrCreateSheet(spreadsheet);
-    const quoteId = createQuoteId();
-    const folder = getPhotosFolder(properties).createFolder(quoteId);
-    const photoUrls = savePhotos(folder, payload.photos || []);
     const batteryHealth = Number(payload.batteryHealth || 0);
 
     if (!Number.isInteger(batteryHealth) || batteryHealth < 1 || batteryHealth > 100) {
       throw new Error("La capacidad de bateria debe ser un numero del 1 al 100.");
     }
 
-    sheet.appendRow([
+    const quoteId = createQuoteId();
+    const photos = Array.isArray(payload.photos) ? payload.photos : [];
+    const folder = photos.length ? getPhotosFolder(properties).createFolder(quoteId) : null;
+    const photoUrls = folder ? savePhotos(folder, photos) : [];
+    const row = [
       quoteId,
       new Date(payload.submittedAt || new Date()),
       safeCell(payload.name),
@@ -64,12 +60,20 @@ function doPost(event) {
       "",
       "",
       safeCell(payload.source || "web-plan-canje"),
-    ]);
+    ];
+
+    const lock = LockService.getScriptLock();
+    lock.waitLock(5000);
+    lockAcquired = true;
+
+    const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+    const sheet = getOrCreateSheet(spreadsheet);
+    sheet.appendRow(row);
 
     return jsonResponse({
       ok: true,
       id: quoteId,
-      folderUrl: folder.getUrl(),
+      folderUrl: folder ? folder.getUrl() : "",
       photoUrls: photoUrls,
     });
   } catch (error) {
