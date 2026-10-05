@@ -289,11 +289,23 @@ export default function ProductsPage() {
       })),
     };
 
-    const draft = await fetch("/api/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(orderPayload),
-    }).then((response) => response.json()).catch(() => ({ id: undefined }));
+    let draft: { id?: string; recorded?: boolean; error?: string };
+
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderPayload),
+      });
+      draft = await response.json();
+
+      if (!response.ok || !draft.id) {
+        throw new Error(draft.error || "No se pudo registrar el pedido.");
+      }
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "No se pudo registrar el pedido.");
+      return;
+    }
 
     const lines = cart.map((item) => {
       const detail = [item.color?.name, item.color?.model].filter(Boolean).join(" / ");
@@ -302,7 +314,7 @@ export default function ProductsPage() {
 
     const message = `Hola isell.cba, quiero consultar disponibilidad de este pedido.
 
-Pedido: ${draft.id || "sin registrar"}
+Pedido: ${draft.id}
 
 ${lines}
 

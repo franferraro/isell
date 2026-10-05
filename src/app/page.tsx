@@ -496,11 +496,23 @@ export default function Home() {
       })),
     };
 
-    const draft = await fetch("/api/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(orderPayload),
-    }).then((response) => response.json()).catch(() => ({ id: undefined }));
+    let draft: { id?: string; recorded?: boolean; error?: string };
+
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderPayload),
+      });
+      draft = await response.json();
+
+      if (!response.ok || !draft.id) {
+        throw new Error(draft.error || "No se pudo registrar el pedido.");
+      }
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "No se pudo registrar el pedido.");
+      return;
+    }
 
     const lines = cart.map((item) => {
       const detail = [item.color?.name, item.color?.model].filter(Boolean).join(" / ");
@@ -509,7 +521,7 @@ export default function Home() {
 
     const message = `Hola isell.cba, quiero consultar disponibilidad de este pedido.
 
-Pedido: ${draft.id || "sin registrar"}
+Pedido: ${draft.id}
 
 ${lines}
 
@@ -546,7 +558,7 @@ Me confirman disponibilidad y forma de pago/envío?`;
 
     try {
       const payload = new FormData();
-      ["name", "phone", "brand", "model", "storage", "condition", "comments"].forEach((field) => {
+      ["name", "phone", "brand", "model", "storage", "batteryHealth", "condition", "comments"].forEach((field) => {
         payload.set(field, String(data.get(field) ?? ""));
       });
 
@@ -573,6 +585,7 @@ Me confirman disponibilidad y forma de pago/envío?`;
 • Marca: ${data.get("brand")}
 • Modelo: ${data.get("model")}
 • Capacidad: ${data.get("storage")}
+• Batería: ${data.get("batteryHealth")}%
 • Estado: ${data.get("condition")}
 • Fotos enviadas: ${compressedFiles.length}
 
@@ -824,7 +837,7 @@ Los datos y las fotos ya quedaron registrados.`;
           <p>Entregá tu celu como parte de pago y llevate tu próximo iPhone.</p>
           <div className="quote-points">
             <span><Check size={16} /> Una propuesta por tu equipo clara, sin vueltas.</span>
-            <span><Check size={16} /> Una propuesta por tu equipo clara, sin vueltas.</span>
+            <span><Check size={16} /> Cotización sin cargo.</span>
             <span><Check size={16} /> Respuesta rápida.</span>
           </div>
           <div className="trade-visual" aria-hidden="true">
@@ -919,6 +932,20 @@ Los datos y las fotos ya quedaron registrados.`;
                   <ChevronDown size={16} />
                 </span>
               </label>
+              <label>
+                Batería <small>(1 a 100)</small>
+                <input
+                  name="batteryHealth"
+                  type="number"
+                  min="1"
+                  max="100"
+                  inputMode="numeric"
+                  placeholder="Ej: 87"
+                  required
+                />
+              </label>
+            </div>
+            <div className="form-row">
               <label>
                 Estado general
                 <span className="select-wrap">

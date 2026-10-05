@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
   try {
     const formData = await request.formData();
-    const requiredFields = ["name", "phone", "brand", "model", "storage", "condition"] as const;
+    const requiredFields = ["name", "phone", "brand", "model", "storage", "batteryHealth", "condition"] as const;
 
     for (const field of requiredFields) {
       if (!isNonEmpty(formData.get(field))) {
@@ -36,6 +36,14 @@ export async function POST(request: Request) {
       .getAll("photos")
       .filter((entry): entry is File => entry instanceof File && entry.size > 0)
       .slice(0, MAX_FILES);
+    const batteryHealth = Number(String(formData.get("batteryHealth")).trim());
+
+    if (!Number.isInteger(batteryHealth) || batteryHealth < 1 || batteryHealth > 100) {
+      return Response.json(
+        { error: "La capacidad de batería debe ser un número del 1 al 100." },
+        { status: 400 },
+      );
+    }
 
     const photos: PhotoPayload[] = [];
     for (const file of files) {
@@ -61,8 +69,10 @@ export async function POST(request: Request) {
       brand: String(formData.get("brand")).trim(),
       model: String(formData.get("model")).trim(),
       storage: String(formData.get("storage")).trim(),
+      batteryHealth,
       condition: String(formData.get("condition")).trim(),
       comments: String(formData.get("comments") ?? "").trim(),
+      source: "web-plan-canje",
       photos,
     };
 

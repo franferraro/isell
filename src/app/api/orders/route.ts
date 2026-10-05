@@ -73,6 +73,12 @@ export async function POST(request: Request) {
     return Response.json({ id: orderId, recorded: Boolean(webhookUrl && webhookSecret) });
   } catch (error) {
     console.error("Order draft failed:", error);
+    if (webhookUrl && webhookSecret) {
+      return Response.json(
+        { error: "No pudimos registrar el pedido antes de abrir WhatsApp." },
+        { status: 502 },
+      );
+    }
     return Response.json({ id: orderId, recorded: false });
   }
 }

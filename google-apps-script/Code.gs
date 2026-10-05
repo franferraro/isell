@@ -1,4 +1,4 @@
-const SHEET_NAME = "Cotizaciones";
+const SHEET_NAME = "Cotizaciones equipos";
 const PHOTOS_FOLDER_NAME = "isell.cba - Fotos de cotizaciones";
 const HEADERS = [
   "ID",
@@ -8,6 +8,7 @@ const HEADERS = [
   "Marca",
   "Modelo",
   "Capacidad",
+  "Capacidad batería",
   "Estado del equipo",
   "Comentarios",
   "Fotos",
@@ -15,6 +16,7 @@ const HEADERS = [
   "Valor interno",
   "Precio de venta",
   "Observaciones internas",
+  "Origen",
 ];
 
 function doPost(event) {
@@ -38,6 +40,11 @@ function doPost(event) {
     const quoteId = createQuoteId();
     const folder = getPhotosFolder(properties).createFolder(quoteId);
     const photoUrls = savePhotos(folder, payload.photos || []);
+    const batteryHealth = Number(payload.batteryHealth || 0);
+
+    if (!Number.isInteger(batteryHealth) || batteryHealth < 1 || batteryHealth > 100) {
+      throw new Error("La capacidad de bateria debe ser un numero del 1 al 100.");
+    }
 
     sheet.appendRow([
       quoteId,
@@ -47,6 +54,7 @@ function doPost(event) {
       safeCell(payload.brand),
       safeCell(payload.model),
       safeCell(payload.storage),
+      batteryHealth,
       safeCell(payload.condition),
       safeCell(payload.comments),
       photoUrls.join("\n"),
@@ -54,6 +62,7 @@ function doPost(event) {
       "",
       "",
       "",
+      safeCell(payload.source || "web-plan-canje"),
     ]);
 
     return jsonResponse({
