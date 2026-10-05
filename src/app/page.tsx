@@ -128,6 +128,18 @@ type ProductsPayload = {
   products?: Product[];
 };
 
+type DeviceOption = {
+  name: string;
+  storage: string[];
+};
+
+type DeviceCatalog = Record<string, DeviceOption[]>;
+
+type QuoteOptionsPayload = {
+  catalog?: DeviceCatalog;
+  states?: string[];
+};
+
 type CartItem = {
   product: Product;
   quantity: number;
@@ -213,46 +225,39 @@ const fallbackProducts: Product[] = [
 
 const areas = ["Bajo Palermo", "Urca", "Cerro de las Rosas", "Villa Belgrano"];
 
-const deviceCatalog = {
+const fallbackDeviceCatalog: DeviceCatalog = {
   Apple: [
+    { name: "iPhone 18 Pro Max", storage: ["256 GB", "512 GB", "1 TB", "2 TB"] },
+    { name: "iPhone 18 Pro", storage: ["256 GB", "512 GB", "1 TB", "2 TB"] },
+    { name: "iPhone 17e", storage: ["256 GB", "512 GB"] },
+    { name: "iPhone 17 Pro Max", storage: ["256 GB", "512 GB", "1 TB", "2 TB"] },
+    { name: "iPhone 17 Pro", storage: ["256 GB", "512 GB", "1 TB"] },
+    { name: "iPhone 17", storage: ["256 GB", "512 GB"] },
+    { name: "iPhone Air", storage: ["256 GB", "512 GB", "1 TB"] },
+    { name: "iPhone 16e", storage: ["128 GB", "256 GB", "512 GB"] },
+    { name: "iPhone 16 Pro Max", storage: ["256 GB", "512 GB", "1 TB"] },
+    { name: "iPhone 16 Pro", storage: ["128 GB", "256 GB", "512 GB", "1 TB"] },
+    { name: "iPhone 16 Plus", storage: ["128 GB", "256 GB", "512 GB"] },
+    { name: "iPhone 16", storage: ["128 GB", "256 GB", "512 GB"] },
     { name: "iPhone 15 Pro Max", storage: ["256 GB", "512 GB", "1 TB"] },
     { name: "iPhone 15 Pro", storage: ["128 GB", "256 GB", "512 GB", "1 TB"] },
+    { name: "iPhone 15 Plus", storage: ["128 GB", "256 GB", "512 GB"] },
     { name: "iPhone 15", storage: ["128 GB", "256 GB", "512 GB"] },
     { name: "iPhone 14 Pro Max", storage: ["128 GB", "256 GB", "512 GB", "1 TB"] },
     { name: "iPhone 14 Pro", storage: ["128 GB", "256 GB", "512 GB", "1 TB"] },
+    { name: "iPhone 14 Plus", storage: ["128 GB", "256 GB", "512 GB"] },
     { name: "iPhone 14", storage: ["128 GB", "256 GB", "512 GB"] },
+    { name: "iPhone SE (3ra gen)", storage: ["64 GB", "128 GB", "256 GB"] },
     { name: "iPhone 13 Pro Max", storage: ["128 GB", "256 GB", "512 GB", "1 TB"] },
     { name: "iPhone 13 Pro", storage: ["128 GB", "256 GB", "512 GB", "1 TB"] },
     { name: "iPhone 13", storage: ["128 GB", "256 GB", "512 GB"] },
-    { name: "iPhone 12", storage: ["64 GB", "128 GB", "256 GB"] },
-    { name: "iPhone 11", storage: ["64 GB", "128 GB", "256 GB"] },
-  ],
-  Samsung: [
-    { name: "Galaxy S24 Ultra", storage: ["256 GB", "512 GB", "1 TB"] },
-    { name: "Galaxy S24", storage: ["128 GB", "256 GB"] },
-    { name: "Galaxy S23 Ultra", storage: ["256 GB", "512 GB", "1 TB"] },
-    { name: "Galaxy S23", storage: ["128 GB", "256 GB"] },
-    { name: "Galaxy A55", storage: ["128 GB", "256 GB"] },
-    { name: "Galaxy A54", storage: ["128 GB", "256 GB"] },
-    { name: "Galaxy A34", storage: ["128 GB", "256 GB"] },
-  ],
-  Motorola: [
-    { name: "Moto Edge 40", storage: ["128 GB", "256 GB"] },
-    { name: "Moto Edge 30", storage: ["128 GB", "256 GB"] },
-    { name: "Moto G84", storage: ["256 GB"] },
-    { name: "Moto G54", storage: ["128 GB", "256 GB"] },
-    { name: "Moto G32", storage: ["64 GB", "128 GB"] },
-  ],
-  Xiaomi: [
-    { name: "Redmi Note 13 Pro", storage: ["128 GB", "256 GB", "512 GB"] },
-    { name: "Redmi Note 13", storage: ["128 GB", "256 GB"] },
-    { name: "Redmi Note 12 Pro", storage: ["128 GB", "256 GB"] },
-    { name: "POCO X6 Pro", storage: ["256 GB", "512 GB"] },
-    { name: "Xiaomi 13T", storage: ["256 GB"] },
+    { name: "iPhone 13 mini", storage: ["128 GB", "256 GB", "512 GB"] },
+    { name: "Otro iPhone", storage: ["64 GB", "128 GB", "256 GB", "512 GB", "1 TB", "2 TB"] },
   ],
 };
 
 const defaultStorageOptions = ["64 GB", "128 GB", "256 GB", "512 GB", "1 TB"];
+const fallbackDeviceStates = ["Como nuevo", "Muy bueno", "Bueno", "Con detalles", "No funciona"];
 
 function normalizeText(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "");
@@ -398,16 +403,15 @@ export default function Home() {
   const [files, setFiles] = useState(0);
   const [quoteStatus, setQuoteStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [quoteMessage, setQuoteMessage] = useState("");
-  const [selectedBrand, setSelectedBrand] = useState("");
   const [modelValue, setModelValue] = useState("");
   const [reviewsData, setReviewsData] = useState<ReviewsPayload | null>(null);
   const [products, setProducts] = useState<Product[]>(fallbackProducts);
+  const [deviceCatalog, setDeviceCatalog] = useState<DeviceCatalog>(fallbackDeviceCatalog);
+  const [deviceStates, setDeviceStates] = useState(fallbackDeviceStates);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
 
-  const catalogModels = selectedBrand && selectedBrand in deviceCatalog
-    ? deviceCatalog[selectedBrand as keyof typeof deviceCatalog]
-    : Object.values(deviceCatalog).flat();
+  const catalogModels = deviceCatalog.Apple?.length ? deviceCatalog.Apple : fallbackDeviceCatalog.Apple;
   const modelQuery = normalizeText(modelValue);
   const exactDevice = modelQuery
     ? catalogModels.find((device) => normalizeText(device.name) === modelQuery)
@@ -429,9 +433,10 @@ export default function Home() {
 
     async function loadPageData() {
       try {
-        const [reviewsResponse, productsResponse] = await Promise.all([
+        const [reviewsResponse, productsResponse, quoteOptionsResponse] = await Promise.all([
           fetch("/api/reviews"),
           fetch("/api/products"),
+          fetch("/api/quote-options"),
         ]);
 
         if (reviewsResponse.ok) {
@@ -442,6 +447,16 @@ export default function Home() {
         if (productsResponse.ok) {
           const data = await productsResponse.json() as ProductsPayload;
           if (!ignore && data.products?.length) setProducts(data.products);
+        }
+
+        if (quoteOptionsResponse.ok) {
+          const data = await quoteOptionsResponse.json() as QuoteOptionsPayload;
+          if (!ignore && data.catalog && Object.keys(data.catalog).length) {
+            setDeviceCatalog(data.catalog);
+          }
+          if (!ignore && data.states?.length) {
+            setDeviceStates(data.states);
+          }
         }
       } catch {
         // Keep curated fallbacks if external data is unavailable.
@@ -582,7 +597,6 @@ Me confirman disponibilidad y forma de pago/envío?`;
 
 • Cotización: ${result.id}
 • Nombre: ${data.get("name")}
-• Marca: ${data.get("brand")}
 • Modelo: ${data.get("model")}
 • Capacidad: ${data.get("storage")}
 • Batería: ${data.get("batteryHealth")}%
@@ -852,6 +866,7 @@ Los datos y las fotos ya quedaron registrados.`;
             <small>Completá los datos para cotizar</small>
           </div>
           <form onSubmit={handleQuote}>
+            <input type="hidden" name="brand" value="Apple" />
             <div className="form-row">
               <label>
                 Nombre
@@ -864,26 +879,7 @@ Los datos y las fotos ya quedaron registrados.`;
             </div>
             <div className="form-row">
               <label>
-                Marca
-                <span className="select-wrap">
-                  <select
-                    name="brand"
-                    required
-                    value={selectedBrand}
-                    onChange={(event) => {
-                      setSelectedBrand(event.target.value);
-                      setModelValue("");
-                    }}
-                  >
-                    <option value="" disabled>Seleccioná la marca</option>
-                    <option>Apple</option><option>Samsung</option><option>Motorola</option>
-                    <option>Xiaomi</option><option>Otra</option>
-                  </select>
-                  <ChevronDown size={16} />
-                </span>
-              </label>
-              <label>
-                Modelo
+                Modelo de iPhone
                 <input
                   name="model"
                   required
@@ -897,6 +893,18 @@ Los datos y las fotos ya quedaron registrados.`;
                     <option value={device.name} key={device.name} />
                   ))}
                 </datalist>
+              </label>
+              <label>
+                Capacidad
+                <span className="select-wrap">
+                  <select name="storage" required defaultValue="" key={storageOptions.join("|")}>
+                    <option value="" disabled>Seleccioná</option>
+                    {storageOptions.map((storage) => (
+                      <option key={storage}>{storage}</option>
+                    ))}
+                  </select>
+                  <ChevronDown size={16} />
+                </span>
               </label>
             </div>
             <div className="model-assist" aria-live="polite">
@@ -915,44 +923,31 @@ Los datos y las fotos ya quedaron registrados.`;
               ) : (
                 <>
                   <Smartphone size={15} />
-                  Elegí marca y empezá a escribir el modelo para ver sugerencias.
+                  Empezá a escribir el modelo de iPhone para ver sugerencias.
                 </>
               )}
             </div>
             <div className="form-row">
               <label>
-                Capacidad
-                <span className="select-wrap">
-                  <select name="storage" required defaultValue="" key={storageOptions.join("|")}>
-                    <option value="" disabled>Seleccioná</option>
-                    {storageOptions.map((storage) => (
-                      <option key={storage}>{storage}</option>
-                    ))}
-                  </select>
-                  <ChevronDown size={16} />
-                </span>
-              </label>
-              <label>
-                Batería <small>(1 a 100)</small>
+                Batería
                 <input
                   name="batteryHealth"
                   type="number"
                   min="1"
                   max="100"
                   inputMode="numeric"
-                  placeholder="Ej: 87"
+                  placeholder="Ej: 98"
                   required
                 />
               </label>
-            </div>
-            <div className="form-row">
               <label>
                 Estado general
                 <span className="select-wrap">
                   <select name="condition" required defaultValue="">
                     <option value="" disabled>Seleccioná el estado</option>
-                    <option>Como nuevo</option><option>Muy bueno</option>
-                    <option>Bueno</option><option>Con detalles</option><option>No funciona</option>
+                    {deviceStates.map((state) => (
+                      <option key={state}>{state}</option>
+                    ))}
                   </select>
                   <ChevronDown size={16} />
                 </span>
